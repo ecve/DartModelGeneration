@@ -141,7 +141,7 @@ def generate_dart_factory(class_name: str, variables: dict):
     return {class_name}(\n"""
     for key in variables.keys():
         type_name, name = variables[key]
-        factory += f"\t  {name}: {get_api_helper_function_name(key, type_name, to_pascal_case(name))},\n"
+        factory += f"\t  {name}: {get_api_helper_function_name(key, type_name, to_pascal_case(key))},\n"
     factory += """    );
   }
     """
@@ -158,11 +158,11 @@ def generate_to_json_function(variables: dict):
         if type_name == 'dict':
             json_str += f"\t  '{key}': {name}.toJson(),\n"
         elif type_name == 'DateTime':
-            json_str += f"\t  '{key}': 'APIHelper.toServerDateTimeFormattedStringFromDateTime({name})',\n"
+            json_str += f"\t  '{key}': APIHelper.toServerDateTimeFormattedStringFromDateTime({name}),\n"
         elif type_name == 'DateTime':
-            json_str += f"\t  '{key}': 'APIHelper.toServerDateTimeFormattedStringFromDateTime({name})',\n"
+            json_str += f"\t  '{key}': APIHelper.toServerDateTimeFormattedStringFromDateTime({name}),\n"
         elif type_name.startswith("List<Single"):
-            json_str += f"\t  '{key}': '{name}.map((e) => e.toJson()).toList()',\n"
+            json_str += f"\t  '{key}': {name}.map((e) => e.toJson()).toList(),\n"
         else:
             json_str += f"\t  '{key}': {name},\n"
 
