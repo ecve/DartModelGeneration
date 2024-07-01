@@ -5,6 +5,25 @@ const { exec } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 
+function pascalToSnake(str) {
+    // Split the string into an array of characters
+    const chars = str.split('');
+
+    // Map over the characters, inserting underscores before uppercase letters
+    const modifiedChars = chars.map((char, index) => {
+        // Check if the character is an uppercase letter and not the first character
+        if (char === char.toUpperCase() && char!== char.toLowerCase() && index > 0) {
+            return '_' + char;
+        }
+        return char;
+    });
+
+    // Join the characters back into a string and convert to lowercase
+    const snakeCaseStr = modifiedChars.join('').toLowerCase();
+
+    return snakeCaseStr;
+}
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
@@ -75,7 +94,7 @@ function activate(context) {
       }
 
       // Save the output to a file inside the GeneratedModel folder
-      const outputFilePath = path.join(generatedModelFolder, `${userInput}.dart`);
+      const outputFilePath = path.join(generatedModelFolder, `${pascalToSnake(userInput)}.dart`);
       fs.writeFileSync(outputFilePath, stdout);
 
       // Show a message that the output was saved
